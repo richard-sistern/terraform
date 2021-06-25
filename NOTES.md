@@ -28,3 +28,16 @@ There is some overlap between tools, however the key areas of focus for each are
 - Disposable Environments - demo, test, etc.
 - Multi-cloud
 
+### Terraform Execution Lifecycle
+
+#### Plan
+
+*What things will Terraform do*
+
+#### Apply
+
+*Create the things*
+
+#### Destroy
+
+*Remove the things*
