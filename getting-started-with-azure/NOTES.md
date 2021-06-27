@@ -286,3 +286,38 @@ resource "azurerm_virtual_machine" "main" {
 }
 ```
 
+### Modules
+
+Terraform [modules documentation](https://www.terraform.io/docs/language/modules/index.html)
+
+Move the following into `./mymodules/modules-example.tf`:
+
+```hcl
+# Resource Group demo
+resource "azurerm_resource_group" "resource_gp" {
+  name = "Terraform-Demo"
+  location = "eastus"
+
+  tags = {
+    Owner = "Rich S"
+  }
+}
+```
+
+This is the referenced in `main.tf` with:
+
+```hcl
+module "mymodule" {
+  source = "./mymodule"
+}
+```
+
+Run `terraform init` to initialise the module:
+
+```shell
+terraform init
+
+# Initializing modules...
+# - mymodule in mymodule
+```
+
