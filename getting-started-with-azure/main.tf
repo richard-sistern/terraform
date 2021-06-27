@@ -14,6 +14,9 @@ module "mymodule" {
   source = "./mymodule"
 }
 
+# Registry module demo added to mymodule folder
+
+
 # VM demo
 
 # Naming prefix

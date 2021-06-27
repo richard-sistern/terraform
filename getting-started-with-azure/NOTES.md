@@ -321,3 +321,73 @@ terraform init
 # - mymodule in mymodule
 ```
 
+### Modules Registry
+
+Terraform [Modules Registry](https://registry.terraform.io/)
+
+Create a `registry-demo.tf` file in `mymodules` folder and enter the `azurerm compute` [example](https://registry.terraform.io/modules/Azure/compute/azurerm/latest):
+
+```hcl
+provider "azurerm" {
+  features {}
+}
+
+resource "azurerm_resource_group" "example" {
+  name     = "example-resources"
+  location = "West Europe"
+}
+
+module "linuxservers" {
+  source              = "Azure/compute/azurerm"
+  resource_group_name = azurerm_resource_group.example.name
+  vm_os_simple        = "UbuntuServer"
+  public_ip_dns       = ["linsimplevmips"] // change to a unique name per datacenter region
+  vnet_subnet_id      = module.network.vnet_subnets[0]
+
+  depends_on = [azurerm_resource_group.example]
+}
+
+module "windowsservers" {
+  source              = "Azure/compute/azurerm"
+  resource_group_name = azurerm_resource_group.example.name
+  is_windows_image    = true
+  vm_hostname         = "mywinvm" // line can be removed if only one VM module per resource group
+  admin_password      = "ComplxP@ssw0rd!"
+  vm_os_simple        = "WindowsServer"
+  public_ip_dns       = ["winsimplevmips"] // change to a unique name per datacenter region
+  vnet_subnet_id      = module.network.vnet_subnets[0]
+
+  depends_on = [azurerm_resource_group.example]
+}
+
+module "network" {
+  source              = "Azure/network/azurerm"
+  resource_group_name = azurerm_resource_group.example.name
+  subnet_prefixes     = ["10.0.1.0/24"]
+  subnet_names        = ["subnet1"]
+
+  depends_on = [azurerm_resource_group.example]
+}
+
+output "linux_vm_public_name" {
+  value = module.linuxservers.public_ip_dns_name
+}
+
+output "windows_vm_public_name" {
+  value = module.windowsservers.public_ip_dns_name
+}
+```
+
+After running `terraform init` to initialise the new modules, `terraform plan` provides the following error:
+
+>  terraform plan
+>
+>  Error: Invalid function argument on .terraform\modules\mymodule.linuxservers\main.tf line 109, in resource "azurerm_virtual_machine" "vm-linux":
+>   109:         key_data = file(ssh_keys.value)
+>      ├────────────────
+>      │ ssh_keys.value is "~/.ssh/id_rsa.pub"
+>
+> Invalid value for "path" parameter: no file exists at ~/.ssh/id_rsa.pub; this function works only with files that are distributed as part of the configuration source code, so if this file will be created by a resource in this configuration you must instead obtain this result from an attribute of that resource.
+
+Which simply means I had yet to run `ssh-keygen` on this laptop.  Complete instructions on this and OpenSSH Client installation can be found [here](https://www.onmsft.com/how-to/how-to-generate-an-ssh-key-in-windows-10).
+
