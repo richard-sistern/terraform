@@ -378,6 +378,8 @@ output "windows_vm_public_name" {
 }
 ```
 
+*These modules require the `Azure CLI` client to be installed and logged in*
+
 After running `terraform init` to initialise the new modules, `terraform plan` provides the following error:
 
 >  terraform plan
