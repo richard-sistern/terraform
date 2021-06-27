@@ -9,6 +9,7 @@ terraform {
   }
 }
 
+# Custom module demo
 module "mymodule" {
   source = "./mymodule"
 }
