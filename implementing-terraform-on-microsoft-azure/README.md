@@ -59,3 +59,28 @@ The authentication values can be specified in environment variables:
 - ARM_TENANT_ID (Azure AD tenant ID for service principal)
 - ARM_USE_MSI (Use Managed Service Identity)
 
+
+
+## Multiple Provider Instances
+
+- Work with more than one subscription
+- Multiple authentication sources
+
+Use an *alias* to have multiple providers:
+```hcl
+provider "azurerm" {
+	alias			= "network"
+	# Credentials
+
+	# If credentials limited to task only, may want to disable the following to avoid an error
+	skip_provider_registration 	= true
+	skip_credentials_validation = true
+}
+```
+
+These are then called in resources with:
+```hcl
+resource "azurerm_virtual_network_peering" "sec" {
+	provider		= "azurerm.network 
+}
+```
