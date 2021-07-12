@@ -84,3 +84,26 @@ resource "azurerm_virtual_network_peering" "sec" {
 	provider		= "azurerm.network 
 }
 ```
+
+## Remote State
+
+- Protect the state file
+- Collaboration
+- Multiple backends supported
+  - Some support locking of state file to protect consistency
+  - Workspaces
+
+Azure blob storage, does support locking and workspaces.
+
+Authentication methods in Azure:
+
+- Managed service identify (use_msi)
+- Shared access signature token (sas_token)
+- Storage access key (access_key)
+- Service principal (client_id)
+
+Process
+
+1. Deploy storage account
+2. Create container
+3. Assign SAS token
