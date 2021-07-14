@@ -107,3 +107,5 @@ Process
 1. Deploy storage account
 2. Create container
 3. Assign SAS token
+
+*backend configuration cannot use variables as it's required at init stage.  However, can use a -backend-config flag.*
