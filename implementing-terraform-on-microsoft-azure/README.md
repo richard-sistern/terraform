@@ -109,3 +109,18 @@ Process
 3. Assign SAS token
 
 *backend configuration cannot use variables as it's required at init stage.  However, can use a -backend-config flag.*
+
+## State as Data Source
+
+```hcl
+data "terraform_remote_state" "networking" {
+	backend = "azurerm"
+
+	config = {
+		storage_account_name 	= var.sa_name
+		container_name			= var.ct_name
+		key						= var.key_name
+		sas_token				= var.sas_token
+	}
+}
+```
