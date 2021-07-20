@@ -112,6 +112,8 @@ Process
 
 ## State as Data Source
 
+**Provide read and list permisisons only so remote state can't be corrupted**
+
 ```hcl
 data "terraform_remote_state" "networking" {
 	backend = "azurerm"
